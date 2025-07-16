@@ -7,14 +7,23 @@ export default function Home() {
 
   const generateCode = () => Math.random().toString(36).substring(2, 8)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    const code = generateCode()
-    const { error } = await supabase.from('links').insert({ code, url })
-    if (!error) {
-      setShort(`${window.location.origin}/${code}`)
-    }
+ const handleSubmit = async (e) => {
+  e.preventDefault()
+  const code = generateCode()
+  console.log("Trying to insert:", { code, url })
+
+  const { error } = await supabase.from('links').insert({ code, url })
+
+  if (error) {
+    console.error("Insert error:", error)
+    alert("Gagal menyimpan ke database.")
+  } else {
+    const shortUrl = `${window.location.origin}/${code}`
+    setShort(shortUrl)
+    console.log("Success, short URL:", shortUrl)
   }
+}
+
 
   return (
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
