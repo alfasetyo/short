@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 )
 
 
@@ -15,6 +16,11 @@ export default function Home() {
  const handleSubmit = async (e) => {
   e.preventDefault()
   const code = generateCode()
+   if (!url.startsWith("http")) {
+  alert("URL harus dimulai dengan http:// atau https://")
+  return
+}
+
   console.log("Trying to insert:", { code, url })
 
   const { error } = await supabase.from('links').insert({ code, url })
